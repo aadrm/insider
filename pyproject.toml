@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "insider"
 version = "1"
 dependencies = [
-	"django"
+	"django==4.2"
 ]
 
 [project.optional-dependencies]
