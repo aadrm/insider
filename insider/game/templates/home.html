@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+
+    <title>Insider</title>
+    <style>
+		body, html {
+				font-family: sans-serif;
+				height: 100%;
+				width: 100%;
+				margin: 0;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background-color: #DAD4B5;
+		}
+		.main-button {
+				font-size: 2em;
+				font-weight: bold;
+				padding: 10px 20px;
+				border-radius: 50%;
+				width: 400px;
+				height: 400px;
+				max-width: 60vw;
+				max-height: 60vw;
+				background-color: #982B1C;
+				color: white;
+				border: none;
+				cursor: pointer;
+		}
+		.update-button .counter-button {
+			position: fixed;
+			padding: 10px 20px;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+		.word-display {
+				font-size: 4em;
+				font-weight: bold;
+				color: #454545;
+				max-width: 100vw;
+				word-wrap: break-word;
+		}
+        .update-button, .reset-button {
+            position: fixed;
+            padding: 10px 20px;
+            background-color: #454545;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .update-button {
+			background-color: #454545;
+			color: white;
+            bottom: 20px;
+            right: 20px;
+        }
+        .reset-button {
+			background-color: #454545;
+			color: white;
+            bottom: 20px;
+            left: 20px;
+        }
+		.counter {
+            position: fixed;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="counter" onclick="handleCounter()">Start</div>
+
+    <div id="mainContainer">
+        <button class="main-button" hx-get="show-word/" hx-swap="outerHTML">Start game</button>
+    </div>
+    <button class="update-button" id="updateButton" 
+            hx-get="next-word/" 
+            hx-trigger="click" 
+		    hx-target="#mainContainer"
+    >
+        Update Word
+    </button>
+    <button class="reset-button" id="updateButton" 
+            hx-get="reset-words/" 
+		    hx-swap="none"
+            hx-trigger="click" 
+    >
+        Reset Game
+    </button>
+    <script>
+		let timer = null;
+		const initialCounterValue = 120;
+		let counter = initialCounterValue;
+
+		function handleCounter() {
+			const counterDiv = document.querySelector('.counter');
+			const body = document.body; 
+
+			if (counterDiv.textContent === "Start") {
+				counter = initialCounterValue;
+				counterDiv.textContent = counter;
+				body.style.backgroundColor = "";
+				counterDiv.style.color= "#454545";
+
+				timer = setInterval(() => {
+					counter--;
+					if (counter > 0) {
+						counterDiv.textContent = counter;
+					} else {
+						clearInterval(timer);
+						timer = null;
+						counterDiv.textContent = "Reset";
+						body.style.backgroundColor = "#800000";
+						counterDiv.style.color= "#ddd";
+					}
+				}, 1000);
+			} else {
+				clearInterval(timer);
+				timer = null;
+				counterDiv.textContent = "Start";
+				body.style.backgroundColor = "";
+				counterDiv.style.color= "#454545";
+			}
+		}
+    </script>
+</body>
+</html>
