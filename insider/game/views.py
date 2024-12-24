@@ -1,28 +1,26 @@
-import random
 import logging
 from django.http import HttpResponse
 from django.shortcuts import render
-from .game_utils import get_next_word
+from .game_utils import (
+    get_next_word,
+    get_current_word_or_start,
+)
 
-logger = logging.getLogger(__name__)
-# Create your views here.
+logger = logging.getLogger('django')
+
 def home(request):
     return render(request, 'home.html')
 
 def show_word(request):
-    word = request.session['word'] if 'word' in request.session else get_next_word(request.session['played_words'])
+    word = get_current_word_or_start(request)
     context = {
         'word': word
     }
     return render(request, 'show_word.html', context)
 
 def next_word(request):
+    get_next_word(request)
 
-    if 'played_words' not in request.session:
-        request.session['played_words'] = []
-    request.session['played_words'].append(request.session['word'])
-    request.session['word'] = get_next_word(request.session['played_words'])
-    print(request.session['played_words'])
     return hide_word(request)
     
 def reset_words(request):
@@ -35,3 +33,4 @@ def reset_words(request):
 def hide_word(request):
     return render(request, 'hide_word.html')
     
+
