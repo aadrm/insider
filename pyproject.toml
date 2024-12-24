@@ -25,7 +25,7 @@ testpaths = [
 ]
 
 [tool.ruff.lint]
-select = ["E", "F", "UP", "B", "I", "SIM", "Q", "TRY", "N", "ASYNC", "A", "FIX", "R", "LOG"]
+select = ["E", "F", "UP", "B", "I", "SIM", "TRY", "N", "ASYNC", "A", "FIX", "R", "LOG"]
 
 
 [tool.ruff]
