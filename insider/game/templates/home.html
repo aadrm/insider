@@ -92,40 +92,57 @@
         Reset Game
     </button>
     <script>
-		let timer = null;
-		const initialCounterValue = 120;
-		let counter = initialCounterValue;
+    let timer = null;
+    const initialCounterValue = 120;
+    let counter = initialCounterValue;
+    
+    async function requestWakeLock() {
+	try {
+	    wakeLock = await navigator.wakeLock.request('screen');
+	    wakeLock.addEventListener('release', () => {
+		console.log('Screen Wake Lock was released');
+	    });
+	    console.log('Screen Wake Lock is active');
+	} catch (err) {
+	    console.error(`${err.name}, ${err.message}`);
+	}
+    }
 
-		function handleCounter() {
-			const counterDiv = document.querySelector('.counter');
-			const body = document.body; 
+    function handleCounter() {
+	    const counterDiv = document.querySelector('.counter');
+	    const body = document.body; 
 
-			if (counterDiv.textContent === "Start") {
-				counter = initialCounterValue;
-				counterDiv.textContent = counter;
-				body.style.backgroundColor = "";
-				counterDiv.style.color= "#454545";
+	    if (counterDiv.textContent === "Start") {
+		    counter = initialCounterValue;
+		    counterDiv.textContent = counter;
+		    body.style.backgroundColor = "";
+		    counterDiv.style.color= "#454545";
 
-				timer = setInterval(() => {
-					counter--;
-					if (counter > 0) {
-						counterDiv.textContent = counter;
-					} else {
-						clearInterval(timer);
-						timer = null;
-						counterDiv.textContent = "Reset";
-						body.style.backgroundColor = "#800000";
-						counterDiv.style.color= "#ddd";
-					}
-				}, 1000);
-			} else {
-				clearInterval(timer);
-				timer = null;
-				counterDiv.textContent = "Start";
-				body.style.backgroundColor = "";
-				counterDiv.style.color= "#454545";
-			}
-		}
+		    requestWakeLock();
+		    timer = setInterval(() => {
+			    counter--;
+			    if (counter > 0) {
+				    counterDiv.textContent = counter;
+			    } else {
+				    clearInterval(timer);
+				    timer = null;
+				    counterDiv.textContent = "Reset";
+				    body.style.backgroundColor = "#800000";
+				    counterDiv.style.color= "#ddd";
+			    }
+		    }, 1000);
+	    } else {
+		    clearInterval(timer);
+		    timer = null;
+		    counterDiv.textContent = "Start";
+		    body.style.backgroundColor = "";
+		    counterDiv.style.color= "#454545";
+	            if (wakeLock !== null) {
+			wakeLock.release();
+			wakeLock = null;
+		    }
+	    }
+    }
     </script>
 </body>
 </html>
